@@ -1,37 +1,19 @@
-# main.py
+# main.py  ← VERSIÓN FINAL Y CORRECTA (agosto 2025)
 import customtkinter as ctk
 from core.database import init_db
 from ui.login_window import LoginWindow
+from ui.main_app import MainApp
 
-# Crear base de datos y tablas automáticamente
+# Creamos la BD y tablas la primera vez
 init_db()
 
-def mostrar_ventana_principal():
-    app = ctk.CTk()
-    app.title("GimnasioPro – Panel Principal")
-    app.geometry("1200x800")
-
-    # Aquí irá todo el sistema real (menú, pestañas, etc.)
-    # Por ahora solo una bienvenida gigante
-    ctk.CTkLabel(
-        app,
-        text="¡BIENVENIDO A GIMNASIOPRO!",
-        font=ctk.CTkFont(size=40, weight="bold")
-    ).pack(expand=True)
-
-    # Información de la sesión actual
-    from core.auth import CURRENT_USER, CURRENT_EMPRESA_ID
-    rol = CURRENT_USER["rol"] if CURRENT_USER else "Desconocido"
-    empresa = "Todas (SuperAdmin)" if CURRENT_USER["rol"] == "SuperAdmin" else f"ID {CURRENT_EMPRESA_ID}"
-
-    ctk.CTkLabel(
-        app,
-        text=f"Usuario: {CURRENT_USER['username'] if CURRENT_USER else '??'} | Rol: {rol} | Empresa: {empresa}",
-        font=ctk.CTkFont(size=16)
-    ).pack(pady=20)
-
+def iniciar_aplicacion_principal():
+    """Esta función se llama solo DESPUÉS de hacer login correctamente"""
+    app = MainApp()
     app.mainloop()
 
-# Iniciar con ventana de login
-login_window = LoginWindow(callback_inicio_sesion=mostrar_ventana_principal)
+# === INICIO DEL PROGRAMA ===
+# 
+# Primero mostramos el login
+login_window = LoginWindow(callback_inicio_sesion=iniciar_aplicacion_principal)
 login_window.mainloop()
