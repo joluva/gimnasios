@@ -3,7 +3,7 @@ from .database import get_connection
 
 # Variable global que siempre tendrá la empresa activa durante la sesión
 CURRENT_EMPRESA_ID = None
-CURRENT_USER = None
+CURRENT_USER = {}
 
 def set_current_empresa(empresa_id):
     global CURRENT_EMPRESA_ID

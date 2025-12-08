@@ -67,5 +67,5 @@ class MiembrosScreen(ctk.CTkFrame):
         self.cargar_miembros(texto)
 
     def nuevo_miembro(self):
-        print("Abrir formulario de nuevo miembro (próximamente)")
-        # Aquí irá el modal/formulario más adelante
+        from .miembros_form import MiembroForm
+        MiembroForm(self.winfo_toplevel())  # abre el formulario
