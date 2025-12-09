@@ -34,33 +34,54 @@ class MiembrosScreen(ctk.CTkFrame):
 
         self.cargar_miembros()
 
+    # def cargar_miembros(self, filtro=""):
+    #     # Limpiar tabla
+    #     for i in self.tree.get_children():
+    #         self.tree.delete(i)
+
+    #     conn = get_connection()
+    #     cur = conn.cursor()
+
+    #     if CURRENT_USER["rol"] == "SuperAdmin":
+    #         sql = """SELECT m.id, m.nombre || ' ' || m.apellido, m.email, m.telefono,
+    #                         tm.nombre, m.estado, m.fecha_fin
+    #                  FROM Miembros m
+    #                  LEFT JOIN TiposMembresias tm ON m.tipo_membresia_id = tm.id
+    #                  WHERE m.nombre || m.apellido || m.email LIKE ?"""
+    #         params = (f"%{filtro}%",)
+    #     else:
+    #         sql = """SELECT m.id, m.nombre || ' ' || m.apellido, m.email, m.telefono,
+    #                         tm.nombre, m.estado, m.fecha_fin
+    #                  FROM Miembros m
+    #                  LEFT JOIN TiposMembresias tm ON m.tipo_membresia_id = tm.id
+    #                  WHERE m.empresa_id = ? AND (m.nombre || m.apellido || m.email LIKE ?)"""
+    #         params = (CURRENT_EMPRESA_ID, f"%{filtro}%")
+
+    #     cur.execute(sql, params)
+    #     for row in cur.fetchall():
+    #         self.tree.insert("", "end", values=row)
+    #     conn.close()
+    
     def cargar_miembros(self, filtro=""):
-        # Limpiar tabla
-        for i in self.tree.get_children():
-            self.tree.delete(i)
+        for item in self.tree.get_children():
+            self.tree.delete(item)
 
         conn = get_connection()
         cur = conn.cursor()
 
-        if CURRENT_USER["rol"] == "SuperAdmin":
-            sql = """SELECT m.id, m.nombre || ' ' || m.apellido, m.email, m.telefono,
-                            tm.nombre, m.estado, m.fecha_fin
-                     FROM Miembros m
-                     LEFT JOIN TiposMembresias tm ON m.tipo_membresia_id = tm.id
-                     WHERE m.nombre || m.apellido || m.email LIKE ?"""
-            params = (f"%{filtro}%",)
-        else:
-            sql = """SELECT m.id, m.nombre || ' ' || m.apellido, m.email, m.telefono,
-                            tm.nombre, m.estado, m.fecha_fin
-                     FROM Miembros m
-                     LEFT JOIN TiposMembresias tm ON m.tipo_membresia_id = tm.id
-                     WHERE m.empresa_id = ? AND (m.nombre || m.apellido || m.email LIKE ?)"""
-            params = (CURRENT_EMPRESA_ID, f"%{filtro}%")
-
-        cur.execute(sql, params)
+        query = """
+            SELECT m.id, m.nombre || ' ' || m.apellido, m.email, m.telefono,
+                tm.nombre, m.estado, m.fecha_fin
+             FROM Miembros m
+            LEFT JOIN TiposMembresias tm ON m.tipo_membresia_id = tm.id
+            WHERE m.empresa_id = ?
+            AND (m.nombre || m.apellido || m.email LIKE ?)
+    """
+        cur.execute(query, (CURRENT_EMPRESA_ID, f"%{filtro}%"))
         for row in cur.fetchall():
             self.tree.insert("", "end", values=row)
         conn.close()
+    
 
     def buscar_miembro(self, event=None):
         texto = self.entry_buscar.get()
