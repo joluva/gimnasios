@@ -1,0 +1,7 @@
+customtkinter==5.2.2
+Pillow==10.4.0
+pyqrcode==1.2.1
+pypng==0.20220715.0  # fijo para pyqrcode
+bcrypt==4.2.0
+reportlab==4.2.5
+openpyxl==3.1.5
